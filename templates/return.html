@@ -1,33 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>return</title>
-         <link rel="stylesheet" href="{{ url_for('static', filename='css/return.css')}}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/return.css')}}">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 
 <body>
+
+    <h1>Results</h1>
+
     <div class="gallery">
-      <a target="_blank" href="{{url_for('static', filename='newbie.png')}}">
-        <img src="{{url_for('static', filename='newbie.png')}}" alt="Cinque Terre" width="1920" height="1080">
+      <a target="_blank" href="{{url_for('static', filename=graph)}}">
+        <img src="{{url_for('static', filename=graph)}}" alt="Cinque Terre" width="1920" height="1080">
       </a>
-      <div class="desc">Add a description of the image here</div>
+      <div class="desc">
+          Prediction of stock prices, training 75% of the data.
+          The picture shows the prediction compared to the actual stock prices
+          in an interval of 5 days.
+      </div>
     </div>
 
 
     <div class="gallery">
-      <a target="_blank" href="{{url_for('static', filename='corr.png')}}">
-        <img src="{{url_for('static', filename='corr.png')}}" alt="Forest" width="1920" height="1080">
+      <a target="_blank" href="{{url_for('static', filename=pred)}}">
+        <img src="{{url_for('static', filename=pred)}}" alt="Forest" width="1920" height="1080">
       </a>
-      <div class="desc">Add a description of the image here</div>
+      <div class="desc">Prediction for the next 5 days</div>
     </div>
 
     <div class="gallery">
-      <a target="_blank" href="{{url_for('static', filename='corr.png')}}">
-        <img src="{{url_for('static', filename='corr.png')}}" alt="Forest" width="1920" height="1080">
+      <a target="_blank" href="{{url_for('static', filename=pcorr[0])}}">
+        <img src="{{url_for('static', filename=pcorr[0])}}" alt="Forest" width="1920" height="1080">
       </a>
-      <div class="desc">Add a description of the image here</div>
+      <div class="desc">Partial autocorrelation plot of the stock prices</div>
     </div>
+
+
+    <div class="gallery">
+      <a target="_blank" href="{{url_for('static', filename=pcorr[1])}}">
+        <img src="{{url_for('static', filename=pcorr[1])}}" alt="Forest" width="1920" height="1080">
+      </a>
+      <div class="desc">Partial autocorrelation plot after differencing the stock prices ones</div>
+    </div>
+
+    <div class="gallery">
+      <a target="_blank" href="{{url_for('static', filename=qcorr[0])}}">
+        <img src="{{url_for('static', filename=qcorr[0])}}" alt="Forest" width="1920" height="1080">
+      </a>
+      <div class="desc">Autocorrelation plot of the stock prices</div>
+    </div>
+
+
+    <div class="gallery">
+      <a target="_blank" href="{{url_for('static', filename=qcorr[1])}}">
+        <img src="{{url_for('static', filename=qcorr[1])}}" alt="Forest" width="1920" height="1080">
+      </a>
+      <div class="desc">Autocorrelation plot after differencing the stock prices ones</div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 
 
 </body>

@@ -1,5 +1,4 @@
 import os
-import warnings
 
 import pandas as pd
 import numpy as np
@@ -14,7 +13,9 @@ from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.graphics.tsaplots import plot_acf
 
-from sklearn.metrics import mean_squared_error
+from pmdarima.arima import auto_arima
+
+import time
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,67 +25,6 @@ sns.set(rc={'figure.figsize':(11, 4)})
 def createDf():
     df = pd.read_csv(ROOT_DIR + '\\eqData.csv', sep = ';')
     return df
-
-def testData(file):
-    df = pd.read_csv(file, sep=';')
-    df = df.dropna()
-    index = 0
-    for column in df.columns:
-        index+= 1
-        if(index == 1):
-            df[column] = pd.to_datetime(df[column], format='%d.%m.%y')
-            df.sort_values(by=[column])
-            df = df.iloc[::-1]
-            df = df.set_index(column)
-        else:
-            if(' ' in df[column][3]):
-                df[column] = df[column].str.replace(' ', '').astype(np.float64)
-            else:
-                df[column] = df[column].str.replace(',', '.').astype(np.float64)
-    return df
-
-
-def websiteArima(df):
-    df = df['Siste']
-
-    prosentDF = 0.5
-    n = int(len(df) * prosentDF)
-    train = df[:n]
-    test = df[n:]
-    step = 20
-    print(step)
-
-    plotDf = df[n - step:n + step]
-
-    print(plotDf)
-
-    model = ARIMA(train, (7, 1, 1))
-
-    result = model.fit(full_output=True)
-
-    fc, se, conf = result.forecast(step)
-
-    print(fc)
-
-    checkWebResults(fc, conf, test, step, plotDf)
-
-
-def checkWebResults(fc, conf, test, step, plotDf):
-
-    #checking results
-
-    fc = pd.Series(fc, index=test[:step].index)
-    lower = pd.Series(conf[:, 0], index=test[:step].index)
-    upper = pd.Series(conf[:, 1], index=test[:step].index)
-
-
-    plt.figure(figsize=(16,8))
-    plt.plot(plotDf, label= "actual")
-    plt.plot(fc, label= "forecast")
-    plt.fill_between(lower.index, lower, upper, color= 'k', alpha= 0.1)
-    plt.title("Forecast")
-    plt.legend(loc="upper left")
-    plt.savefig(ROOT_DIR + '\\static\\newbie.png')
 
 
 def updatedDataSet():
@@ -164,9 +104,6 @@ def check_stationarity(ts_data):
     for k, v in df_test[4].items():
         print('Critical value at %s: %1.5f' % (k, v))
 
-
-
-
 def isMyDataStationary():
     df_final = pd.Series(updatedDataSet()['Siste'])
 
@@ -177,83 +114,125 @@ def isMyDataStationary():
     check_stationarity(diff)
 
 
-def return_Stationary():
-    df_final = pd.Series(updatedDataSet()['Siste'])
+def return_Stationary(df):
+
+
+    df_final = pd.Series(df['Siste'])
 
     diff = df_final.diff().dropna()
 
-    '''
-    df_final = pd.Series(updatedDataSet()['Siste'])
-
-
-    df_final_log = np.log(df_final)
-
-    df_final_log_diff = df_final_log - df_final_log.shift(1)
-
-
-    df_final_log_diff = df_final_log_diff.dropna()
-
-    '''
 
     return diff
 
 
 def find_p(df):
-
-    fig, (ax1, ax2) = plt.subplots(1,2, figsize = (16,4))
-
-    ax1.plot(df)
-    ax2.set_title("Difference once")
-    ax2.set_ylim(0,1)
-    plot_pacf(df, ax= ax2)
-    plt.show()
+    plot_pacf(df)
+    plt.xlabel('LAG')
+    plt.ylabel('PACF')
+    plt.savefig(ROOT_DIR + '\\images\\PACF.png')
 
     #we can see that PACF lag 7 is significant as it's above significance line.
 
-def find_q(df):
 
+
+def find_qq(df):
+    plot_acf(df)
+    plt.xlabel('LAG')
+    plt.ylabel('ACF')
+    plt.savefig(ROOT_DIR + '\\images\\ACF.png')
+
+def find_q(df, fileName):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 4))
-
     ax1.plot(df)
     ax2.set_title("Difference once")
-    ax2.set_ylim(0, 1)
     plot_acf(df, ax=ax2)
-    plt.show()
+
+
+    new_graph_name = "graph_" + str(time.time())
+    print(new_graph_name)
+
+    for filename in os.listdir('static/'):
+        if filename.startswith('graph_'):  # not to remove other images
+            os.remove('static/' + filename)
+
+    plt.savefig(ROOT_DIR +'\\static\\' + new_graph_name +'.png')
+
+
+
+    plt.savefig(ROOT_DIR + '\\static\\' + fileName + '.png')
     # 7 is suitable
+
+
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+def print_errors(actual, forecast):
+    rms = sqrt(mean_squared_error(actual, forecast))
+    mape = np.mean(np.abs(forecast - actual) / np.abs(actual))  # MAPE
+
+    fcError = abs(actual-forecast).mean()
+
+    print('-'*100)
+    print('fcErros: ' + str(fcError))
+    print('-'*100)
+    print('rms: '+ str(rms))
+    print('-'*100)
+    print('mape: ' +str(mape))
+
+
+
+def create_preplot(model_fit, df):
+    a= model_fit.plot_predict(dynamic=False)
+    print(type(a))
+    a.to_csv(ROOT_DIR+ '\\pred.csv')
+    plt.show()
+    a = a[1:1252]
+    df = df[2:1253]
+
+    a.to_csv(ROOT_DIR +'\\Arima(6,1,7).csv')
+    '''
+    #print_errors(df, a)
+    df.plot(label= 'actual')
+    plt.plot(a, label= 'forecast')
+    plt.legend()
+    plt.xlabel('Date')
+    plt.ylabel('EQRN')
+    plt.savefig(ROOT_DIR+ '\\images\\smallfcplot1.png')
+    
+    '''
+
+def find_error_preday():
+    df = updatedDataSet()['Siste']
+    model = ARIMA(df, (6, 1, 7))
+    result = model.fit(full_output=True)
+    create_preplot(result, df)
 
 def implement_arima():
 
     df = updatedDataSet()['Siste']
 
-    prosentDF = 0.5
+    prosentDF = 0.7
     n = int(len(df) * prosentDF)
     train = df[:n]
     test = df[n:]
 
 
-    step = 20
+    step = 5
 
     plotDf = df[n - step:n + step]
 
-    #series = return_Stationary()
-
-    #pd.set_option('display.max_columns', None)  # or 1000
 
     model = ARIMA(train,(7, 1, 7))
 
-
     result = model.fit(full_output=True)
+
+    #create_residuals(result)
+    #print(result.summary())
+    create_preplot(result, df)
 
     fc, se, conf = result.forecast(step)
 
-    #predictions = model.predict(model_fit.params)
-
-    #summery = model_fit.summary()
-
-    #model_fit.plot_predict(start=1, end= 100, dynamic=False)
-    #plt.show()
-
-    checkResults(fc, conf, test, step, plotDf)
+    #checkResults(fc, conf, test, step, plotDf)
 
 def checkResults(fc, conf, test, step, plotDf):
 
@@ -270,17 +249,114 @@ def checkResults(fc, conf, test, step, plotDf):
     plt.fill_between(lower.index, lower, upper, color= 'k', alpha= 0.1)
     plt.title("Forecast")
     plt.legend(loc="upper left")
-    #plt.show()
+    plt.savefig(ROOT_DIR + '\\images\\plotTrain111.png')
+
+
+def create_residuals(model_fit):
+    residuals = pd.DataFrame(model_fit.resid)
+    fig, ax = plt.subplots(1, 2)
+    residuals.plot(title="Residuals", ax=ax[0])
+    residuals.plot(kind='kde', title='Density', ax=ax[1])
+    plt.savefig(ROOT_DIR +'\\images\\resudual.png')
+
+def create_series_plot(df):
+    df.plot()
+    plt.title('Closed stock prices Equinor')
+    plt.xlabel('date')
+    plt.ylabel('closed price')
+    plt.savefig(ROOT_DIR + '\\images\\EQNR.png')
+
+
+
+#------------------------------------------------------------------------------------
+
+def makeAutoArima():
+    df = updatedDataSet()['Siste']
+
+    prosentDF = 0.7
+    n = int(len(df) * prosentDF)
+    train = df[:n]
+    test = df[n:]
+
+    step = 5
+
+    plotDf = df[n - step:n + step]
+
+    model_auto = auto_arima(train, trace=True, error_action='ignore', start_p=1,start_q=1,max_p=8,max_q=8,
+              suppress_warnings=True,stepwise=False,seasonal=False, max_order=20)
+
+    print(model_auto.order)
+    print(model_auto)
+    print(model_auto.summary())
+
+def checkStationarity(df):
+    df = df['Siste']
+    Series = pd.Series(df)
+    nrOfDiff= 0
+    result = adfuller(Series)
+    k= 0
+    for key, value in result[4].items():
+        if (k == 0):
+            myvalue = value
+            print('\t%s: %.3f' % (key, value))
+            break
+        k += 1
+
+    adfStat = result[0]
+    print(adfStat)
+    print(myvalue)
+
+    if(adfStat< myvalue):
+        return nrOfDiff
+    else:
+        while(nrOfDiff <=2):
+            nrOfDiff+=1
+            df = df.diff().dropna()
+            Series= pd.Series(df)
+            result = adfuller(Series)
+            adfStat = result[0]
+            k= 0
+            for key, value in result[4].items():
+                if(k== 0):
+                    myvalue = value
+                    print('\t%s: %.3f' % (key, value))
+                    break
+                k += 1
+
+            if(adfStat< myvalue):
+                print(adfStat)
+                print(myvalue)
+                return nrOfDiff
 
 if __name__ == '__main__':
+    print(checkStationarity(updatedDataSet()))
+    #makeAutoArima()
+    #find_error_preday()
+    #create_preplot()
+    #implement_arima()
 
+    '''
+    diff = pd.Series(updatedDataSet()['Siste'])
+    diff = diff.diff().dropna()
+    find_qq(diff)
+    '''
+    #create_series_plot(diff)
+    #create_ac_plot(df_final)
+    #isMyDataStationary()
+
+    '''    
     x=1
     print(x)
+    df = updatedDataSet()['Siste']
+    find_q(df, 'nondiff_p')
+
+    '''
+
     #testData()
+
     '''    
     df = return_Stationary()
     find_q(df)
-
     #isMyDataStationary()
-
+    
     '''
