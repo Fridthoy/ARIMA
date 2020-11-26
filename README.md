@@ -29,8 +29,13 @@ if __name__ == '__main__':
     implement_arima() #Use arima to calculate prediction with given values
 ```
 
-##Results :heavy_check_mark:
+## Results :heavy_check_mark:
+From the calculation p= 7 d=1 and q=7 was the most suitable.
+In the picture below is the prediction of ARIMA(7,1,7) predicting the next day compared to the 
+actual closing price. 
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/smallfcplot.png)
+
+The picture below shows our error results. 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
