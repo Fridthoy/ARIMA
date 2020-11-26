@@ -29,6 +29,9 @@ if __name__ == '__main__':
     implement_arima() #Use arima to calculate prediction with given values
 ```
 
+##Results :heavy_check_mark:
+![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/smallfcplot.png)
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
