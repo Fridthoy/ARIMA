@@ -35,7 +35,7 @@ In the picture below is the prediction of ARIMA(7,1,7) predicting the next day c
 actual closing price. 
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/smallfcplot.png)
 
-The picture below shows our error results. 
+The picture below shows the error results. 
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/resulat.PNG)
 
 ## Contributing
