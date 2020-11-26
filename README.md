@@ -36,6 +36,7 @@ actual closing price.
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/smallfcplot.png)
 
 The picture below shows our error results. 
+![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/resulat.PNG)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
