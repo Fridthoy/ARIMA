@@ -20,6 +20,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 sns.set(rc={'figure.figsize':(11, 4)})
 
+#Chacking statinarity automatically
 def checkStationarity(df):
     df = df['Siste']
     Series = pd.Series(df)
@@ -54,6 +55,7 @@ def checkStationarity(df):
 
                 return nrOfDiff
 
+#finding otimal order with autoarima and AIC
 def findOrder(df):
     nrofdiff = checkStationarity(df)
     df = df['Siste']
@@ -65,10 +67,9 @@ def findOrder(df):
     print(order)
     print(model_auto.summary())
 
-def createDf():
-    df = pd.read_csv(ROOT_DIR + '\\eqData.csv', sep = ';')
-    return df
 
+
+#reading files that user want to look at
 def testData(file):
     df = pd.read_csv(file, sep=';')
     df = df.dropna()
@@ -87,7 +88,7 @@ def testData(file):
                 df[column] = df[column].str.replace(',', '.').astype(np.float64)
     return df
 
-
+#creating arima forecast
 def websiteArima(df, step):
     df = df['Siste']
     print(order)
@@ -108,6 +109,7 @@ def websiteArima(df, step):
 
     return new_graph_name
 
+#plotting data
 def checkWebResults(fc, conf, test, step, plotDf):
 
     #checking results
@@ -135,7 +137,7 @@ def checkWebResults(fc, conf, test, step, plotDf):
 
     return new_graph_name
 
-
+#creating prediction
 def createPredictions(df, step):
     df = df['Siste']
 
@@ -160,6 +162,7 @@ def createPredictions(df, step):
 
     return newname
 
+#plotting prediction
 def makePredictionPlot(fc, conf, df, step):
 
     dateIndex= pd.date_range(df.tail(1).index[0], periods=step+1, freq='D')
@@ -187,6 +190,7 @@ def makePredictionPlot(fc, conf, df, step):
 
     return new_graph_name
 
+#-------------------------------------------rest of the code is for creating ACF and PACF plots
 def find_nondiff_p(df):
 
     df = df['Siste']

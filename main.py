@@ -21,12 +21,12 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 sns.set(rc={'figure.figsize':(11, 4)})
 
-
+#Open dataframe with pandas
 def createDf():
     df = pd.read_csv(ROOT_DIR + '\\eqData.csv', sep = ';')
     return df
 
-
+#Change the dataset to fit with the ARIMA model, date = index and set datatype to each column
 def updatedDataSet():
     df = createDf()
     df["EQNR"] = pd.to_datetime(df['EQNR'], format='%d.%m.%Y')
@@ -52,11 +52,13 @@ def updatedDataSet():
 
     return df
 
+#Make plot of EQRN
 def makePlot():
     updatedDataSet().plot()
     plt.show()
 
 
+#Make lag plot
 def createLagPlot():
 
     pd.plotting.lag_plot(updatedDataSet(), lag= 3)
@@ -64,6 +66,7 @@ def createLagPlot():
     plt.show()
 
 
+#Making autocorrolation plot
 def create_ac_plot(df):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 4))
     ax1.plot(df)
@@ -73,7 +76,6 @@ def create_ac_plot(df):
 
 
 #checking for stationarity
-
 def check_stationarity(ts_data):
 
     # Rolling statistics
@@ -104,6 +106,7 @@ def check_stationarity(ts_data):
     for k, v in df_test[4].items():
         print('Critical value at %s: %1.5f' % (k, v))
 
+#check stationarity
 def isMyDataStationary():
     df_final = pd.Series(updatedDataSet()['Siste'])
 
@@ -113,7 +116,7 @@ def isMyDataStationary():
 
     check_stationarity(diff)
 
-
+#return new differencing
 def return_Stationary(df):
 
 
@@ -125,6 +128,7 @@ def return_Stationary(df):
     return diff
 
 
+#create pacf plot
 def find_p(df):
     plot_pacf(df)
     plt.xlabel('LAG')
@@ -134,13 +138,14 @@ def find_p(df):
     #we can see that PACF lag 7 is significant as it's above significance line.
 
 
-
+#create acf plot
 def find_qq(df):
     plot_acf(df)
     plt.xlabel('LAG')
     plt.ylabel('ACF')
     plt.savefig(ROOT_DIR + '\\images\\ACF.png')
 
+#create acf plot
 def find_q(df, fileName):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 4))
     ax1.plot(df)
@@ -166,6 +171,7 @@ def find_q(df, fileName):
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
+#testing error of prediction
 def print_errors(actual, forecast):
     rms = sqrt(mean_squared_error(actual, forecast))
     mape = np.mean(np.abs(forecast - actual) / np.abs(actual))  # MAPE
@@ -180,7 +186,7 @@ def print_errors(actual, forecast):
     print('mape: ' +str(mape))
 
 
-
+#Create plot and checking prediction, plot_predict is modified to return timeSeries
 def create_preplot(model_fit, df):
     a= model_fit.plot_predict(dynamic=False)
     print(type(a))
@@ -190,23 +196,16 @@ def create_preplot(model_fit, df):
     df = df[2:1253]
 
     a.to_csv(ROOT_DIR +'\\Arima(6,1,7).csv')
-    '''
-    #print_errors(df, a)
-    df.plot(label= 'actual')
-    plt.plot(a, label= 'forecast')
-    plt.legend()
-    plt.xlabel('Date')
-    plt.ylabel('EQRN')
-    plt.savefig(ROOT_DIR+ '\\images\\smallfcplot1.png')
-    
-    '''
 
+
+#finding error
 def find_error_preday():
     df = updatedDataSet()['Siste']
     model = ARIMA(df, (6, 1, 7))
     result = model.fit(full_output=True)
     create_preplot(result, df)
 
+#implementing arima with p,d and q values for checking prediction
 def implement_arima():
 
     df = updatedDataSet()['Siste']
@@ -215,7 +214,6 @@ def implement_arima():
     n = int(len(df) * prosentDF)
     train = df[:n]
     test = df[n:]
-
 
     step = 5
 
@@ -232,8 +230,9 @@ def implement_arima():
 
     fc, se, conf = result.forecast(step)
 
-    #checkResults(fc, conf, test, step, plotDf)
+    checkResults(fc, conf, test, step, plotDf)
 
+#creating plot for checking results
 def checkResults(fc, conf, test, step, plotDf):
 
     #checking results
@@ -252,6 +251,7 @@ def checkResults(fc, conf, test, step, plotDf):
     plt.savefig(ROOT_DIR + '\\images\\plotTrain111.png')
 
 
+#testing the residual of forecast
 def create_residuals(model_fit):
     residuals = pd.DataFrame(model_fit.resid)
     fig, ax = plt.subplots(1, 2)
@@ -259,6 +259,7 @@ def create_residuals(model_fit):
     residuals.plot(kind='kde', title='Density', ax=ax[1])
     plt.savefig(ROOT_DIR +'\\images\\resudual.png')
 
+#creating plot of series
 def create_series_plot(df):
     df.plot()
     plt.title('Closed stock prices Equinor')
@@ -270,6 +271,7 @@ def create_series_plot(df):
 
 #------------------------------------------------------------------------------------
 
+#Integrating autoArima for testing AIC values
 def makeAutoArima():
     df = updatedDataSet()['Siste']
 
@@ -288,45 +290,6 @@ def makeAutoArima():
     print(model_auto.order)
     print(model_auto)
     print(model_auto.summary())
-
-def checkStationarity(df):
-    df = df['Siste']
-    Series = pd.Series(df)
-    nrOfDiff= 0
-    result = adfuller(Series)
-    k= 0
-    for key, value in result[4].items():
-        if (k == 0):
-            myvalue = value
-            print('\t%s: %.3f' % (key, value))
-            break
-        k += 1
-
-    adfStat = result[0]
-    print(adfStat)
-    print(myvalue)
-
-    if(adfStat< myvalue):
-        return nrOfDiff
-    else:
-        while(nrOfDiff <=2):
-            nrOfDiff+=1
-            df = df.diff().dropna()
-            Series= pd.Series(df)
-            result = adfuller(Series)
-            adfStat = result[0]
-            k= 0
-            for key, value in result[4].items():
-                if(k== 0):
-                    myvalue = value
-                    print('\t%s: %.3f' % (key, value))
-                    break
-                k += 1
-
-            if(adfStat< myvalue):
-                print(adfStat)
-                print(myvalue)
-                return nrOfDiff
 
 if __name__ == '__main__':
     df = updatedDataSet()

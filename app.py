@@ -10,6 +10,7 @@ def hello():
     return render_template('index.html')
 
 
+
 @app.route('/data', methods=['GET', 'POST'])
 def data():
     if request.method == 'POST':
