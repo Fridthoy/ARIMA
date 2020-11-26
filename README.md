@@ -5,7 +5,7 @@ This program is made for predicting the future stock prices of Equinor.
  Website is also implemented in webBackend.py and app.py with flask. 
  The website only uses auto_arima for calculating the ARIMA model.
 
-#Installation
+# Installation
 
 Use the packages pip to install statsmodels and pmdarima
 
@@ -14,7 +14,7 @@ pip install statsmodels
 pip install pmdarima
 ```
 
-#Usage
+# Usage
 
 ```python
 from statsmodels.tsa.arima_model import ARIMA
