@@ -329,34 +329,10 @@ def checkStationarity(df):
                 return nrOfDiff
 
 if __name__ == '__main__':
-    print(checkStationarity(updatedDataSet()))
-    #makeAutoArima()
-    #find_error_preday()
-    #create_preplot()
-    #implement_arima()
+    df = updatedDataSet()
+    isMyDataStationary()
+    df = return_Stationary(df)
+    find_p(df) #creating pac plot, optimal value = 7
+    find_qq(df) #creating pacf plot, optimal value = 7
+    implement_arima()
 
-    '''
-    diff = pd.Series(updatedDataSet()['Siste'])
-    diff = diff.diff().dropna()
-    find_qq(diff)
-    '''
-    #create_series_plot(diff)
-    #create_ac_plot(df_final)
-    #isMyDataStationary()
-
-    '''    
-    x=1
-    print(x)
-    df = updatedDataSet()['Siste']
-    find_q(df, 'nondiff_p')
-
-    '''
-
-    #testData()
-
-    '''    
-    df = return_Stationary()
-    find_q(df)
-    #isMyDataStationary()
-    
-    '''
