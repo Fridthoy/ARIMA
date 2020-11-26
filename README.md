@@ -12,6 +12,7 @@ Use the packages pip to install statsmodels and pmdarima
 ```bash
 pip install statsmodels
 pip install pmdarima
+pip install pandas
 ```
 
 ## Usage
