@@ -6,6 +6,7 @@ This program is made for predicting the future stock prices of Equinor.
  The website only uses auto_arima for calculating the ARIMA model.
 
 #Installation
+
 Use the packages pip to install statsmodels and pmdarima
 
 ```bash
