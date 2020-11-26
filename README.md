@@ -1,6 +1,9 @@
 # Forecasting Stock Closing Price with Autoregressive Integrated Moving Average :chart_with_upwards_trend:
 
-This program is made for predicting the future stock prices to Equinor. The program is calculated in main.py where the ARIMA model is integrated. 
+This program is made for predicting the future stock prices of Equinor.
+ The program is calculated in main.py where the ARIMA model is integrated. 
+ Website is also implemented in webBackend.py and app.py with flask. 
+ The website only uses auto_arima for calculating the ARIMA model.
 
 #Installation
 Use the packages pip to install statsmodels and pmdarima
