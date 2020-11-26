@@ -4,6 +4,7 @@ This program is made for predicting the future stock prices of Equinor.
  The program is calculated in main.py where the ARIMA model is integrated. 
  Website is also implemented in webBackend.py and app.py with flask. 
  The website only uses auto_arima for calculating the ARIMA model.
+ Some of the error calculations are also done in excel dataPred_1.xlsx
 
 ## Installation
 
