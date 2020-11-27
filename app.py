@@ -27,7 +27,7 @@ def data():
         predName = createPredictions(df, step)
 
         return render_template('return.html',
-            graph= webname, pred= predName, pcorr = pcorr, qcorr = qcorr)
+            graph='/'+ webname, pred= '/'+predName, pcorr = pcorr, qcorr = qcorr)
 
 @app.route('/about')
 def about():
