@@ -4,8 +4,6 @@ from webBackend import *
 
 app = Flask(__name__)
 
-os.environ['ENV'] == 'prod'
-
 @app.route('/', methods = ['GET', 'POST'])
 def hello():
     return render_template('index.html')
