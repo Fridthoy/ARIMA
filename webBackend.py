@@ -60,12 +60,16 @@ def findOrder(df):
     nrofdiff = checkStationarity(df)
     df = df['Siste']
 
-    model_auto = auto_arima(df, test='adf',d=nrofdiff,D=0,start_P=0, trace=True, error_action='ignore', start_p=0, start_q=0, max_p=3, max_q=3,
-                            suppress_warnings=True, stepwise=False, seasonal=False, max_order=6)
+    print("starting")
+    #model_auto = auto_arima(df, test='adf',d=nrofdiff, trace=True, error_action='ignore',start_p=2, start_P=2, start_Q=2,start_q=2, max_p=5, max_q=5,
+                            #suppress_warnings=True, stepwise=False, seasonal=False, max_order=10)
+
     global order
-    order = model_auto.order
+    order=(2,1,2)
+
+    #order = model_auto.order
     print(order)
-    print(model_auto.summary())
+    #print(model_auto.summary())
 
 
 
