@@ -68,7 +68,11 @@ When webpage is opened it should look like this:
 
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/webpage.png)
 
+
+The explination of the webpage can be seen here: 
+
+https://www.youtube.com/watch?v=YX7Xy7jUfa8&feature=youtu.be
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
 
