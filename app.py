@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for
 import pandas as pd
 from webBackend import *
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/', methods = ['GET', 'POST'])
 def hello():
