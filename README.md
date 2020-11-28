@@ -14,13 +14,26 @@ Use the packages pip to install statsmodels and pmdarima
 pip install statsmodels
 pip install pmdarima
 pip install pandas
+pip install numpy
+pip install seaborn 
+pip install matplotlib
 ```
 
 ## Usage
 
 ```python
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.graphics.tsaplots import plot_acf
 from pmdarima.arima import auto_arima
+import time
+
 
 if __name__ == '__main__':
     df = updatedDataSet() #creating dataset
@@ -40,6 +53,15 @@ actual closing price.
 The picture below shows the error results. 
 
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/resulat.PNG)
+
+
+##Webpage
+For running the webpage: 
+
+```bash
+python app.py
+```
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
