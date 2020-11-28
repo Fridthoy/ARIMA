@@ -66,7 +66,7 @@ python app.py
 
 When webpage is opened it should look like this: 
 
-![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/webpage.PNG)
+![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/webpage.png)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
