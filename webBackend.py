@@ -61,14 +61,12 @@ def findOrder(df):
     df = df['Siste']
 
     print("starting")
-    #model_auto = auto_arima(df, test='adf',d=nrofdiff, trace=True, error_action='ignore',start_p=2, start_P=2, start_Q=2,start_q=2, max_p=5, max_q=5,
-                            #suppress_warnings=True, stepwise=False, seasonal=False, max_order=10)
+    model_auto = auto_arima(df, test='adf',d=nrofdiff, trace=True, error_action='ignore',start_p=2, start_P=2, start_Q=2,start_q=2, max_p=5, max_q=5,
+                            suppress_warnings=True, stepwise=False, seasonal=False, max_order=10)
 
     global order
-    order=(2,1,2)
-
-    #order = model_auto.order
-    print(order)
+    order = model_auto.order
+    #print(order)
     #print(model_auto.summary())
 
 
