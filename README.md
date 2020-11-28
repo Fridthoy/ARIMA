@@ -55,7 +55,8 @@ The picture below shows the error results.
 ![alt text](https://github.com/Fridthoy/ARIMA/blob/master/images/resulat.PNG)
 
 
-##Webpage
+
+##nWebpage
 
 For running the webpage: 
 
